@@ -2,17 +2,16 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use std::fs;
 use std::io::Error;
-use std::collections::HashMap;
 
 pub struct TreeNode <T> {
-    val: T,
-    parent: Option<Rc<RefCell<TreeNode<T>>>>,
-    children: Vec<Rc<RefCell<TreeNode<T>>>>,
+    pub val: T,
+    pub  parent: Option<Rc<RefCell<TreeNode<T>>>>,
+    pub  children: Vec<Rc<RefCell<TreeNode<T>>>>,
 }
 
 pub struct File {
-    is_directory: bool,
-    file_name: String,
+    pub  is_directory: bool,
+    pub  file_name: String,
 }
 
 pub fn generate_file_tree(input_path: String) -> Result<Rc<RefCell<TreeNode<File>>>, Error> {
@@ -51,13 +50,14 @@ fn look_up_children(current_node: Rc<RefCell<TreeNode<File>>>, current_path: Str
         }
 
         let current_clone = Rc::clone(&current_node);
-        current_clone.try_borrow_mut().unwrap().children.push(Rc::clone(&child_rc_node));
+        current_clone.borrow_mut().children.push(Rc::clone(&child_rc_node));
     }
     Ok(())
 }
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
     use super::*;
 
   #[test]

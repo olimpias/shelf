@@ -1,7 +1,6 @@
-use std::env;
-use crate::search;
-
-
+use std::{env, rc::Rc, cell::RefCell};
+use colored::Colorize;
+use crate::search::{self, TreeNode, File};
 
 struct Arguments {
     input_file: String
@@ -18,13 +17,44 @@ pub fn run() {
 }
 
 fn execute_search(args: Arguments) {
-    let file = match search::generate_file_tree(args.input_file) {
+    let tree_root = match search::generate_file_tree(args.input_file) {
         Ok(f) => f,
         Err(e) => {
             eprintln!("unable to generate tree due to err: {}", e);
             std::process::exit(1);
         }
     };
+    print_nodes(tree_root, String::from(""));
+}
+
+fn print_nodes(current: Rc<RefCell<TreeNode<File>>>, path: String) {
+    let borrow_current = current.borrow();
+    print_file(&borrow_current.val, &path);
+    for child in borrow_current.children.iter() {
+        let new_path = if path == "" {
+            format!("{}", borrow_current.val.file_name)
+        } else{
+            format!("{}/{}", path, borrow_current.val.file_name)
+        };
+        print_nodes(Rc::clone(child),new_path );
+    }
+}
+
+fn print_file(file: &File, path: &String) {
+    if file.is_directory {
+        if path == "" {
+            println!("{}", file.file_name);
+        } else {
+            println!("{}/{}",path, file.file_name);
+        }
+    } else {
+        if path == "" {
+            println!("{}", file.file_name);
+        } else {
+            println!("{}/{}",path, file.file_name.green());
+        }
+        
+    }
 }
 
 fn print_helper() {
