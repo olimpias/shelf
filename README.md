@@ -3,3 +3,7 @@
 
 Use the following command to run it.
 `shelf search <INPUT DIRECTORY PATH>`
+
+Use the following command for current path
+
+`shelf search .`
