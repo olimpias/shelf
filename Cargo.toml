@@ -2,6 +2,8 @@
 name = "shelf"
 version = "0.1.0"
 edition = "2021"
+description = " CLI tool that allows you to scan in side of your directories easily with a deep look up"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
